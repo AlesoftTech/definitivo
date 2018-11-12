@@ -1,12 +1,14 @@
 package srvcifIC201820;
+
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.KeyPair;
-
 import java.security.Security;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,7 +69,7 @@ public class Coordinador {
 		}
 
 	}
-	
+
 	public static void main(String[] args) throws Exception {
 		System.out.println(MAESTRO + "Establezca puerto de conexion:");
 		int ip = Integer.parseInt(PUERTO);
@@ -78,17 +80,19 @@ public class Coordinador {
 		keyPairServidor = Seg.grsa();
 		certSer = Seg.gc(keyPairServidor);
 
-		try {
-			poolSize = Integer.parseInt(args[0]);
-			numTransacciones = Integer.parseInt(args[1]);
-			respuesta = Integer.parseInt(args[2]);
-		} catch (Exception e) {
-			System.out.println(
-					"establezca: el numero de Threads en el pool, el numero de transacciones y el numero de replica");
-			return;
-		}
+		/////////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////////
+		// Cambiar números aquí
+		/////////////////////////////////////////////////////////////////////////////////
+		poolSize = 1;
+		numTransacciones = 1;
+		respuesta = 1;
+		/////////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////////
+		
 
 		ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(poolSize);
+		System.out.println(MAESTRO + "Creado pool de tamanio " + poolSize);
 		List<Future<Double[]>> resultados = new ArrayList<Future<Double[]>>();
 		generarLog();
 
@@ -163,42 +167,42 @@ public class Coordinador {
 		System.exit(0);
 	}
 
-	
-//	public static void main(String[] args) {
-//		// TODO Auto-generated method stub
-//
-//		// System.out.println(MAESTRO + "Establezca puerto de conexion:");
-//		// InputStreamReader isr = new InputStreamReader(System.in);
-//		// BufferedReader br = new BufferedReader(isr);
-//		// int ip = Integer.parseInt(br.readLine());
-//		// System.out.println(MAESTRO + "Empezando servidor maestro en puerto " + ip);
-//		// // Adiciona la libreria como un proveedor de seguridad.
-//		// // Necesario para crear certificados.
-//		// Security.addProvider(new
-//		// org.bouncycastle.jce.provider.BouncyCastleProvider());
-//		// keyPairServidor = Seg.grsa();
-//		// certSer = Seg.gc(keyPairServidor);
-//		//
-//		//
-//		//
-//		// int idThread = 0;
-//		// // Crea el socket que escucha en el puerto seleccionado.
-//		// ss = new ServerSocket(ip);
-//		// System.out.println(MAESTRO + "Socket creado.");
-//		// while (true) {
-//		// try {
-//		// Socket sc = ss.accept();
-//		// System.out.println(MAESTRO + "Cliente " + idThread + " aceptado.");
-//		// //Delegado3 d3 = new Delegado3(sc,idThread);
-//		// idThread++;
-//		// //d3.start();
-//		// } catch (IOException e) {
-//		// System.out.println(MAESTRO + "Error creando el socket cliente.");
-//		// e.printStackTrace();
-//		// }
-//		// }
-//		
-//
-//	}
+	// public static void main(String[] args) {
+	// // TODO Auto-generated method stub
+	//
+	// // System.out.println(MAESTRO + "Establezca puerto de conexion:");
+	// // InputStreamReader isr = new InputStreamReader(System.in);
+	// // BufferedReader br = new BufferedReader(isr);
+	// // int ip = Integer.parseInt(br.readLine());
+	// // System.out.println(MAESTRO + "Empezando servidor maestro en puerto " +
+	// ip);
+	// // // Adiciona la libreria como un proveedor de seguridad.
+	// // // Necesario para crear certificados.
+	// // Security.addProvider(new
+	// // org.bouncycastle.jce.provider.BouncyCastleProvider());
+	// // keyPairServidor = Seg.grsa();
+	// // certSer = Seg.gc(keyPairServidor);
+	// //
+	// //
+	// //
+	// // int idThread = 0;
+	// // // Crea el socket que escucha en el puerto seleccionado.
+	// // ss = new ServerSocket(ip);
+	// // System.out.println(MAESTRO + "Socket creado.");
+	// // while (true) {
+	// // try {
+	// // Socket sc = ss.accept();
+	// // System.out.println(MAESTRO + "Cliente " + idThread + " aceptado.");
+	// // //Delegado3 d3 = new Delegado3(sc,idThread);
+	// // idThread++;
+	// // //d3.start();
+	// // } catch (IOException e) {
+	// // System.out.println(MAESTRO + "Error creando el socket cliente.");
+	// // e.printStackTrace();
+	// // }
+	// // }
+	//
+	//
+	// }
 
 }

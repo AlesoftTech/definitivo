@@ -32,8 +32,8 @@ import org.bouncycastle.x509.X509V3CertificateGenerator;
 
 public class ClienteServ {
 
-	private static final String HOST = "localhost";
-	public static final int PUERTO = 8088;
+	private static final String HOST = "192.168.0.21";
+	public static final int PUERTO = 8085;
 	public static final String SEPARADOR = ":";
 	private static String ALGORITMO;
 	private static SecretKey llaveSimetrica;
@@ -70,7 +70,11 @@ public class ClienteServ {
 		return certificado.generate(pair.getPrivate(), "BC");
 	}
 
-	public static void main(String[] args) throws Exception {
+	public ClienteServ() {
+
+	}
+
+	public void enviarProtocolo() throws Exception {
 
 		KeyPair keyPair;
 		KeyPairGenerator generator;
@@ -97,12 +101,8 @@ public class ClienteServ {
 		while (estado < 7) {
 			switch (estado) {
 			case 0: // iniciar sesion
-				fromUser = stdIn.readLine();
-				if (fromUser.equals("HOLA")) {
-					escritor.println(fromUser);
-				} else if (!fromUser.equals("HOLA")) {
-					System.out.println("ERROR, esperaba HOLA");
-				}
+				escritor.println("HOLA");
+
 				if ((fromServer = lector.readLine()).equals("OK")) {
 					System.out.println("Servidor: " + fromServer);
 					estado++;
@@ -111,8 +111,7 @@ public class ClienteServ {
 			case 1: // mandar algoritmos
 
 				System.out.println("Elija un algoritmo simétrico: AES, Blowfish");
-				fromUser = stdIn.readLine();
-				String sim = fromUser;
+				String sim = "AES";
 				SIM = sim;
 
 				System.out.println("Algoritmo asimétrico: RSA");
@@ -120,8 +119,7 @@ public class ClienteServ {
 				ASIM = asim;
 
 				System.out.println("Elija un algoritmo de Hash: HMACMD5, HMACSHA1, HMACSHA256");
-				fromUser = stdIn.readLine();
-				String jash = fromUser;
+				String jash = "HMACMD5";
 				ALGORITMO = jash;
 				String algoritmos = "ALGORITMOS" + SEPARADOR + sim + SEPARADOR + asim + SEPARADOR + jash;
 				escritor.println(algoritmos);
@@ -186,7 +184,6 @@ public class ClienteServ {
 				String temp = DatatypeConverter.printHexBinary(aConvertir);
 				escritor.println(temp);
 				System.out.println("Llave encriptada mandada: " + temp);
-				
 
 				String respser = lector.readLine();
 				System.out.println("Servidor: " + respser);
@@ -194,27 +191,25 @@ public class ClienteServ {
 				estado++;
 				break;
 			case 5: // enviar consulta
-				System.out.println("Escriba la consulta a realizar: ");
-				consulta = stdIn.readLine();
-				
+				consulta = "83494";
+
 				Cipher cip3 = Cipher.getInstance(SIM);
 				cip3.init(Cipher.ENCRYPT_MODE, llaveSimetrica);
 				byte[] aConvertir2 = cip3.doFinal(consulta.getBytes());
 				String temp2 = DatatypeConverter.printHexBinary(aConvertir2);
 				escritor.println(temp2);
 				System.out.println("Consulta encriptada: " + temp2);
-				
+
 				estado++;
 				break;
 			case 6: // generar hash de la consulta
 				Mac verificador = Mac.getInstance(ALGORITMO);
 				verificador.init(llaveSimetrica);
 				byte[] hashPos = verificador.doFinal(consulta.getBytes());
-				
+
 				String hashHexa = DatatypeConverter.printHexBinary(hashPos);
 				escritor.println(hashHexa);
 				System.out.println("Hash consulta: " + hashHexa);
-				
 
 				System.out.println("Respuesta servidor: " + lector.readLine());
 				estado++;
